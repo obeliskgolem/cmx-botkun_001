@@ -12,8 +12,8 @@ config_url = config["cmx_url"]
 config_token = config["cmx_token"]
 
 # for test purpose, please enable following statements
- config_url = config["botsin_url"]
- config_token = config["botsin_token"]
+# config_url = config["botsin_url"]
+# config_token = config["botsin_token"]
 
 toot_client = Mastodon::REST::Client.new(base_url: config_url, bearer_token: config_token)
 
@@ -21,14 +21,13 @@ streaming_client = Mastodon::Streaming::Client.new(base_url: config_url, bearer_
 
 puts "Client Initialized"
 
-toot_client.create_status("cmxBot君，上线 :0140:\n")
+toot_client.create_status("cmxBot君，重启一下 :0140:\n")
 
 toot = "cmx每日话题收集 :2010:\n"
 
 s = Set.new()
 
 reg1 = /class=\"mention hashtag\" rel=\"tag\">#<span>(.*?)<\/span>/
-reg2 = /cmx\.im/
 
 time1 = Time.new  # used for toot time interval
 time2 = Time.new  # time.now
@@ -55,20 +54,20 @@ begin
 
     time2 = Time.now
 
-    puts time2-time1
-    puts time2-time3
-
-    if (time2-time1>300)
+    if (time2-time1>1800)   # if 30 minutes have passed
       s.each do |hashtag|
         toot = toot + "##{hashtag}\n"
       end
+
       if s.empty?
-        toot = "没有收集到hashtag :0240:\n"
+        toot_client.create_status("没有收集到hashtag :0240:\n")
+      else
+        toot_client.create_status(toot)
       end
-      toot_client.create_status(toot)
+
       time1 = time2
 
-      if (time2-time3>600)
+      if (time2-time3>86400)    # if a day has passed
         s.clear
         toot = "cmx每日话题收集 :2010:\n\n"
         time3 = time2
