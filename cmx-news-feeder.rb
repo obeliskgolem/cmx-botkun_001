@@ -3,8 +3,12 @@ require 'bundler/setup'
 require 'mastodon'
 require 'rss'
 require 'set'
+require 'pp'
+require 'yaml'
 
-client = Mastodon::REST::Client.new(base_url: "https://cmx.im", bearer_token: "8bde56b7aa0e84fae2c66a27c6974bd0f64c95b3a565ae1ed0720ebadebfe1a3")
+config = YAML.new("config.yaml")
+
+client = Mastodon::REST::Client.new(base_url: config["cmx_url"], bearer_token: config["cmx_token"])
 
 puts "Hello World!"
 toot = ""
