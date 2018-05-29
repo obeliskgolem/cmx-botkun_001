@@ -19,13 +19,16 @@ mv config.yaml.example config.yaml
 # manually config your config.yaml file with generated token
 ```
 
-3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See https://github.com/tootsuite/mastodon-api/issues/36 for details.
+3. There is a bug in official Mastodon API so I forked tootsuite/mastodon-api and manually fixed it. Fetch my libraby instead until the bug is fixed in official repo.
+
+**See https://github.com/tootsuite/mastodon-api/issues/36 for details.**
 
 ```
-vim /Users/XXXXXX/.rbenv/versions/2.3.6/lib/ruby/gems/2.3.0/bundler/gems/mastodon-api-6557c5cc580f/lib/mastodon/streaming/response.rb
+# vim Gemfile
+gem 'mastodon-api', :git => "https://github.com/obeliskgolem/mastodon-api-1.git"
 ```
 
-Replace the `on_body()` function with code
+My manual fix is nothing else, just replacing the `on_body()` function with following code
 
 ``` Ruby
       def on_body(data)
@@ -36,7 +39,7 @@ Replace the `on_body()` function with code
           type = has_data[1]
           data = has_data[2]
 
-          next if !(type == "update")         # added a check before parsing JSON
+          next if !(type == "update")         # check if streaming content have body to parse, Streaming::Response may be 'delete' events that lacks data and will cause JSON::ParseError
 
           @block.call(type, JSON.parse(data))
         end
