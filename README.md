@@ -19,7 +19,7 @@ mv config.yaml.example config.yaml
 # manually config your config.yaml file with generated token
 ```
 
-3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See tootsuite/mastodon-api#36 for details.
+3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See https://github.com/tootsuite/mastodon-api/issues/36 for details.
 
 ```
 vim /Users/XXXXXX/.rbenv/versions/2.3.6/lib/ruby/gems/2.3.0/bundler/gems/mastodon-api-6557c5cc580f/lib/mastodon/streaming/response.rb
