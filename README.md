@@ -19,7 +19,7 @@ mv config.yaml.example config.yaml
 # manually config your config.yaml file with generated token
 ```
 
-3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. In my laptop, the source code was downloaded into `/Users/XXX/.rbenv/versions/2.3.6/lib/ruby/gems/2.3.0/bundler/gems/mastodon-api-6557c5cc580f/lib/mastodon/`
+3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See tootsuite/mastodon-api#36 for details.
 
 ```
 vim /Users/XXXXXX/.rbenv/versions/2.3.6/lib/ruby/gems/2.3.0/bundler/gems/mastodon-api-6557c5cc580f/lib/mastodon/streaming/response.rb
@@ -58,3 +58,5 @@ It should be working.
 [Mastodon API in Ruby](https://github.com/tootsuite/mastodon-api)
 
 [Streaming API code examples](https://github.com/takahashim/mastodon-book-sample)
+
+[Making a Mastodon Bot in Ruby](http://benjbrandall.xyz/mastodon-bot-ruby/?i=3)
