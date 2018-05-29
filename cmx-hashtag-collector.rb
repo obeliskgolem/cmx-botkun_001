@@ -19,8 +19,9 @@ toot_client = Mastodon::REST::Client.new(base_url: config_url, bearer_token: con
 
 streaming_client = Mastodon::Streaming::Client.new(base_url: config_url, bearer_token: config_token)
 
-
 puts "Client Initialized"
+
+toot_client.create_status("cmxBot君，上线 :0140:\n")
 
 toot = "cmx每日话题收集 :2010:\n"
 
@@ -29,8 +30,9 @@ s = Set.new()
 reg1 = /class=\"mention hashtag\" rel=\"tag\">#<span>(.*?)<\/span>/
 reg2 = /cmx\.im/
 
-time1 = Time.new
-time2 = Time.new
+time1 = Time.new  # used for toot time interval
+time2 = Time.new  # time.now
+time3 = Time.new  # used for daily clear
 
 puts "Service started at " + time1.inspect
 
@@ -38,6 +40,9 @@ begin
   streaming_client.stream("public/local") do |stream_toot|
     next if stream_toot.kind_of?(Mastodon::Streaming::DeletedStatus)
     next if stream_toot.kind_of?(Mastodon::Notification)
+    puts stream_toot.account.username
+
+    next if (stream_toot.account.username == "botkun_001")
 
     puts stream_toot.content
 
@@ -51,8 +56,9 @@ begin
     time2 = Time.now
 
     puts time2-time1
+    puts time2-time3
 
-    if (time2-time1>500)
+    if (time2-time1>300)
       s.each do |hashtag|
         toot = toot + "##{hashtag}\n"
       end
@@ -60,10 +66,13 @@ begin
         toot = "没有收集到hashtag :0240:\n"
       end
       toot_client.create_status(toot)
-      s.clear
       time1 = time2
-      toot = "cmx每日话题收集 :2010:\n\n"
-      sleep(120)
+
+      if (time2-time3>600)
+        s.clear
+        toot = "cmx每日话题收集 :2010:\n\n"
+        time3 = time2
+      end
     end
   end
 rescue EOFError => e

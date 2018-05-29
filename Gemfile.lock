@@ -1,6 +1,6 @@
 GIT
-  remote: https://github.com/tootsuite/mastodon-api.git
-  revision: 6557c5cc580f611c75da5f77280ec1dc571d08e0
+  remote: https://github.com/obeliskgolem/mastodon-api-1.git
+  revision: 64f0ab825c89371a46937d36f184db783da8061d
   specs:
     mastodon-api (1.2.0)
       addressable (~> 2.5)
