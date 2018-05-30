@@ -23,7 +23,9 @@ puts "Client Initialized"
 
 toot_client.create_status("cmxBot君，重启一下 :0140:\n")
 
-toot = "cmx每日话题收集 :2010:\n"
+initial_toot = ""
+spoiler_warning = "cmx每日话题收集 :2010:\n"
+toot = initial_toot
 
 s = Set.new()
 
@@ -54,7 +56,9 @@ begin
 
     time2 = Time.now
 
-    if (time2-time1>1800)   # if 30 minutes have passed
+    if (time2-time1>config["toot_freq"])   # if 2 hours (by default) have passed
+      toot = initial_toot
+
       s.each do |hashtag|
         toot = toot + "##{hashtag}\n"
       end
@@ -62,14 +66,13 @@ begin
       if s.empty?
         toot_client.create_status("没有收集到hashtag :0240:\n")
       else
-        toot_client.create_status(toot)
+        toot_client.create_status_with_spoiler(toot, spoiler_warning)
       end
 
       time1 = time2
 
-      if (time2-time3>86400)    # if a day has passed
+      if (time2-time3>config["hashtag_clear_freq"])    # if a day (by default) has passed
         s.clear
-        toot = "cmx每日话题收集 :2010:\n\n"
         time3 = time2
       end
     end

@@ -1,2 +1,6 @@
-cmx_url = "https://cmx.im"
-cmx_token = XXXXXX
+cmx_url: "https://cmx.im"
+cmx_token: XXX
+botsin_url: "https://botsin.space"
+botsin_token: XXX
+toot_freq: 7200
+hashtag_clear_freq: 43200
