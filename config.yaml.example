@@ -2,5 +2,6 @@ cmx_url: "https://cmx.im"
 cmx_token: XXX
 botsin_url: "https://botsin.space"
 botsin_token: XXX
-toot_freq: 7200
-hashtag_clear_freq: 43200
+toot_freq: 28800
+hashtag_clear_freq: 28800
+emotion_freq: 43200

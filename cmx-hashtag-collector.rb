@@ -21,19 +21,23 @@ streaming_client = Mastodon::Streaming::Client.new(base_url: config_url, bearer_
 
 puts "Client Initialized"
 
-toot_client.create_status("cmxBot君，重启一下 :0140:\n")
+# toot_client.create_status("cmxBot君，重启一下 :0140:\n")
 
 initial_toot = ""
-spoiler_warning = "cmx每日话题收集 :2010:\n"
+spoiler_warning_hashtag = "cmx每日话题收集 :2010:\n"
+spoiler_warning_emotion = "cmx每日心情 :2010:\n"
 toot = initial_toot
 
-s = Set.new()
+s = Set.new() # for hashtags
+t = Set.new() # for emotions
 
 reg1 = /class=\"mention hashtag\" rel=\"tag\">#<span>(.*?)<\/span>/
+reg2 = /\B(:\w+?:)/
 
 time1 = Time.new  # used for toot time interval
 time2 = Time.new  # time.now
-time3 = Time.new  # used for daily clear
+time3 = Time.new  # used for daily hashtag clear
+time4 = Time.new  # used for daily emotion clear
 
 puts "Service started at " + time1.inspect
 
@@ -50,8 +54,21 @@ begin
     x = reg1.match(stream_toot.content)
     while x
       y = x.post_match
-      x.captures.each{ |hashtag| s.add(hashtag) }
+      x.captures.each{ |hashtag| s.add(hashtag.upcase) }
       x = reg1.match(y)
+    end
+
+    x = reg2.match(stream_toot.content)
+    while x
+      y = x.post_match
+      x.captures.each{ |emotions| t.add(emotions) }
+      x = reg2.match(y)
+    end
+    x = reg2.match(stream_toot.spoiler_text)
+    while x
+      y = x.post_match
+      x.captures.each{ |emotions| t.add(emotions) }
+      x = reg2.match(y)
     end
 
     time2 = Time.now
@@ -60,13 +77,13 @@ begin
       toot = initial_toot
 
       s.each do |hashtag|
-        toot = toot + "##{hashtag}\n"
+        toot = toot +  "##{hashtag}\n"
       end
 
       if s.empty?
         toot_client.create_status("没有收集到hashtag :0240:\n")
       else
-        toot_client.create_status_with_spoiler(toot, spoiler_warning)
+        toot_client.create_status_with_spoiler(toot, spoiler_warning_hashtag)
       end
 
       time1 = time2
@@ -75,6 +92,25 @@ begin
         s.clear
         time3 = time2
       end
+    end
+
+    if (time2-time4>config["emotion_freq"])   # if 2 hours (by default) have passed
+        toot = initial_toot
+
+        puts t
+
+        t.each do |emotion|
+          toot = toot +  " #{emotion}"
+        end
+
+        if t.empty?
+          toot_client.create_status("今日无心情 :0240:\n")
+        else
+          toot_client.create_status_with_spoiler(toot, spoiler_warning_emotion)
+        end
+
+        time4 = time2
+        t.clear
     end
   end
 rescue EOFError => e

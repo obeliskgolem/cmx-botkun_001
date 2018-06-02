@@ -1,6 +1,6 @@
 # Introduction
 
-This is a bot for collecting all the hashtags posted in cmx.im local timeline every 30 minutes.
+This is a bot for collecting all the hashtags posted in cmx.im local timeline every [hashtag_clear_freq] seconds, and toot them every [toot_freq] seconds.
 
 # Usage
 
@@ -21,7 +21,7 @@ mv config.yaml.example config.yaml
 # manually config your config.yaml file with generated token
 ```
 
-3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See https://github.com/tootsuite/mastodon-api/issues/36 for details.
+3. There is a bug in official Mastodon API and you should modify `streaming/response.rb` accordingly. See [Issue](https://github.com/tootsuite/mastodon-api/issues/36) for details.
 
 ```
 vim /Users/XXXXXX/.rbenv/versions/2.3.6/lib/ruby/gems/2.3.0/bundler/gems/mastodon-api-6557c5cc580f/lib/mastodon/streaming/response.rb
@@ -45,6 +45,8 @@ Replace the `on_body()` function with code
       end
 ```
 
+This project use [modified_api](https://github.com/obeliskgolem/mastodon-api-1) for Bundle exec.
+
 4. Executing the bot from CLI
 
 ```
@@ -52,8 +54,6 @@ ruby cmx-hashtag-collector.rb
 ```
 
 It should be working.
-
-
 
 # References
 
