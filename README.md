@@ -2,6 +2,8 @@
 
 This is a bot for collecting all the hashtags posted in cmx.im local timeline every [hashtag_clear_freq] seconds, and toot them every [toot_freq] seconds.
 
+2018/06/08 Added a thread to collect daily Chinese crosswords puzzles
+
 # Usage
 
 1. Clone this repo. Make sure you have Ruby Gem and Bundler installed
