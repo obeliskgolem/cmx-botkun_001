@@ -14,8 +14,8 @@ def init
   config_token = $config["cmx_token"]
 
   # for test purpose, please enable following statements
-  #config_url = $config["botsin_url"]
-  #config_token = $config["botsin_token"]
+  config_url = $config["botsin_url"]
+  config_token = $config["botsin_token"]
 
   $toot_client = Mastodon::REST::Client.new(base_url: config_url, bearer_token: config_token)
 
@@ -141,23 +141,18 @@ def cmx_crosswords_guardian
 end
 
 def cmx_crosswords_chinese
-  count_time = Time.now
+  source_dest = "http://tuili8.com/tzyx/"
 
   while true
-    if (Time.now - count_time > $config["crosswords_freq"])
-      count_crosswords = (((Time.now - $config["crosswords_base_time"]).to_i) / 86400) + $config["crosswords_base_count"]
-
       Phantomjs.run("./crosswords.js")
-      uploaded_png = $toot_client.upload_media('./capture.png')
+      puts "js file finished"
 
-      puts "tooting crosswords puzzle"
+      uploaded_png = $toot_client.upload_media('./capture.png')
+      puts "png uploaded"
 
       $toot_client.create_status("#每日填字游戏\n\n" + source_dest, nil, [uploaded_png.id], "public")
 
-      count_time = Time.now
-    end
-
-    sleep($config["crosswords_freq"])
+      sleep($config["crosswords_freq"])
   end
 end
 

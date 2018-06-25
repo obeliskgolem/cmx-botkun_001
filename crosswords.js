@@ -1,23 +1,22 @@
-var instance = require('webpage').create();
 var page = require('webpage').create();
 var system = require('system');
 
 var fs = require('fs');
-var file_h = fs.open('crosswords_website', 'r');
-var line = file_h.readLine();
-file_h.close();
+var stream = fs.open("./crosswords_website", 'r');
+var line = stream.readLine();
+stream.close();
+console.log(line);
+
 
 page.open(line, function () {
-            //Heres the actual difference from your code...
+
     var nextpuzzle = page.evaluate(function () {
         return document.querySelectorAll(".content_next a")[1].getAttribute("href");
     });
 
     nextpuzzle = "http://www.tuili8.com" + nextpuzzle;
 
-    file_h = fs.open('crosswords_website', 'w');
-    file_h.writeLine(nextpuzzle);
-    file_h.close();
+    fs.write("./crosswords_website", nextpuzzle, "w");
 
     var bb = page.evaluate(function () {
         return document.querySelector(".c").getBoundingClientRect();
@@ -32,10 +31,3 @@ page.open(line, function () {
 
     phantom.exit();
 });
-
-/*
-instance.open(system.args[1], function() {
-instance.render('guardian-today.png');
-phantom.exit();
-});
-*/
